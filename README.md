@@ -21,17 +21,20 @@ Project Set-Up
 
 ### Virtual Environment and Clone Repository
 
-The best way to run the code is to use a python virtual environment. This will require that you have python3 and git already installed on your system. To begin, run `python3 -m venv project-name` to create a virtual environment in a folder called project-name. Now run `cd project-name` to change directories. To clone the repository run `git clone https://github.com/csmithchicago/analyze_instacart_data.git`
-
-### Data Download
-
-The transaction data can be downloaded in a zip file from Instacart at the following [link](https://www.instacart.com/datasets/grocery-shopping-2017). After downloading the unzipped data should be placed in `./data/external/`. 
-<!-- This can also be done by running `python ./src/data/get_instacart_data.py` from the command line. This will download the files and place them in the correct folder. -->
+The best way to run the code is to use a python virtual environment. This will require that you have python3 and git already installed on your system. To begin, run `python3 -m venv project-name` to create a virtual environment in a folder called project-name. Now run `cd project-name` to change directories. The following command is then run to clone the repository.
+`git clone https://github.com/csmithchicago/analyze_instacart_data.git`
 
 ### Install Python Requirements
 
-Now activate the virtual environment and install the required modules by running `source bin/activate && cd analyze_instacart_data && pip install -r requirements.txt`.
+`source bin/activate`
+`cd analyze_instacart_data`
+`pip install -r requirements.txt`
 
+### Data Download
+
+The transaction data can be downloaded in a zip file from Instacart at the following [link](https://www.instacart.com/datasets/grocery-shopping-2017). After downloading the unzipped data should be placed in `./data/external/`.
+
+This can also be done by running `python ./src/data/get_instacart_data.py` from the command line. This will download the files and place them in the correct folder.
 
 Project Organization
 ------------
@@ -84,4 +87,8 @@ Project Organization
 
 --------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+Project References
+------------
+
+* "The Instacart Online Grocery Shopping Dataset 2017", Accessed from [Instacart](https://www.instacart.com/datasets/grocery-shopping-2017) on 05-02-2019
+* Project based on the cookiecutter data science project [template](https://drivendata.github.io/cookiecutter-data-science/).
