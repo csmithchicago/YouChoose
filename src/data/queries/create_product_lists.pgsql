@@ -1,5 +1,5 @@
 -- insert the product pairs into new table
-DROP TABLE product_adjacency_map;
+DROP TABLE IF EXISTS product_adjacency_map;
 
 SELECT * INTO product_adjacency_map from
 (WITH tbl AS (SELECT 
@@ -7,13 +7,13 @@ SELECT * INTO product_adjacency_map from
     array_agg(product_id ORDER BY add_to_cart_order) AS prod_list
 FROM order_products__prior
 GROUP BY order_id
--- LIMIT 50
+-- LIMIT 500
 )
 SELECT
     t1.* AS origin,
     t2.* AS destination,
     COUNT(t1) as weight
-FROM 
+FROM
     (SELECT unnest(tbl.prod_list) AS origin FROM tbl) AS t1
 INNER JOIN
     (SELECT unnest(tbl.prod_list) AS destination FROM tbl) AS t2
