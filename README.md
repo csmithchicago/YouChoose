@@ -90,5 +90,4 @@ Project Organization
 Project References
 ------------
 
-* "The Instacart Online Grocery Shopping Dataset 2017", Accessed from [Instacart](https://www.instacart.com/datasets/grocery-shopping-2017) on 05-02-2019
-* Project based on the cookiecutter data science project [template](https://drivendata.github.io/cookiecutter-data-science/).
+* "The Instacart Online Grocery Shopping Dataset 2017", Accessed from [Instacart](https://www.instacart.com/datasets/grocery-shopping-2017) on 06-16-2019* Project based on the cookiecutter data science project [template](https://drivendata.github.io/cookiecutter-data-science/).
