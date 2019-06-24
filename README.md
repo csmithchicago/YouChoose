@@ -1,6 +1,10 @@
 Analyze Instacart Data
 ==============================
 
+[![Build Status](https://travis-ci.org/csmithchicago/analyze_instacart_data.svg?branch=master)](https://travis-ci.org/csmithchicago/analyze_instacart_data)
+
+[![Coverage Status](https://coveralls.io/repos/github/csmithchicago/analyze_instacart_data/badge.svg?branch=master)](https://coveralls.io/github/csmithchicago/analyze_instacart_data?branch=master)
+
 Project Overview
 ------------
 
@@ -53,8 +57,8 @@ Project Organization
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    │                         and a short `-` delimited description, e.g.
+    │                         `1.0-initial-data-exploration`.
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
@@ -82,6 +86,8 @@ Project Organization
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
+    │
+    ├── tests             <- Tests to check functionality of codebase
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
 
