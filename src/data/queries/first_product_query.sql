@@ -8,5 +8,5 @@ COPY (
     WHERE p.add_to_cart_order=1
     GROUP BY products.product_name
     ORDER BY COUNT(p.product_id) DESC
-) 
+)
 TO '/home/coreys/perm-usb/coreys/Documents/instacart/analyze_instacart_data/data/processed/first_order_item_db.csv' DELIMITER ',' CSV HEADER;

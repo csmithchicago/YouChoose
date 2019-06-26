@@ -9,13 +9,13 @@ CREATE OR REPLACE FUNCTION public.array_contains(
     LANGUAGE 'sql'
 
     COST 100
-    VOLATILE 
-AS $BODY$SELECT 
+    VOLATILE
+AS $BODY$SELECT
 case when count(*)::integer > 0 then 1
 else 0
 end
 FROM unnest(arr)
-where exists (select * from unnest(arr) as q 
+where exists (select * from unnest(arr) as q
 			  where q=val)
 LIMIT 1;
 $BODY$;
@@ -61,7 +61,7 @@ SELECT slow_pop('{foo,bar,baz}'::text[], 3) AS t;
 
 -- create directed node tuples from products in ass to cart order
 CREATE OR REPLACE FUNCTION public.directed_nodes(prod_list anyarray)
-    RETURNS Table(f int, t int) AS 
+    RETURNS Table(f int, t int) AS
     'SELECT unnest(prod_list[:(array_upper($1, 1)-1)]), unnest(prod_list[2:])'
     LANGUAGE 'sql'
     IMMUTABLE ;

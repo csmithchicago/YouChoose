@@ -11,8 +11,8 @@ import os
 import urllib.parse
 
 import dotenv
-from eralchemy import render_er
 import pandas as pd
+from eralchemy import render_er
 from sqlalchemy import MetaData, create_engine
 
 
@@ -20,22 +20,23 @@ class Database:
     """
     Database is a class used to connect to a relational database using sqlalchemy
     and an env file containing the database credentials.
-    
+
     Some more info about the class attributes and functions.
     """
 
-    def __init__(self, dotenv_path, db_type="psql", db_name=""):
+    def __init__(self, dotenv_path, db_type="psql", db_name="", use_dotenv=True):
         """
         Initialize the database class with the path to the env file containing
         the database credentials.
         """
-        _ = dotenv.load_dotenv(dotenv_path=dotenv_path)
+        if use_dotenv:
+            _ = dotenv.load_dotenv(dotenv_path=dotenv_path)
 
         DB_PASSWORD = os.getenv("DB_PASSWORD", "")
         DB_NAME = os.getenv("DB_NAME")
         DB_USER = os.getenv("DB_USER", "postgres")
         DB_HOST = os.getenv("DB_HOST", "")
-        
+
         if db_type == "psql":
             self.db_string = (
                 f"postgresql+psycopg2://{DB_USER}:"
@@ -89,9 +90,7 @@ class Database:
     def save_layout(self, filename):
         """
         Save the layout of the database to file.
-        
+
         Allowed filetypes are png, dot, er (markdown), and pdf.
         """
         render_er(self.db_string, filename)
-        
-        

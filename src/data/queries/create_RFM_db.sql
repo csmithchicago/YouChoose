@@ -21,8 +21,8 @@ FROM
 		where eval_set='prior'
 		GROUP BY user_id) t1
 FULL JOIN
-(SELECT user_id, CAST(days_since_prior as INT) FROM orders 
-	WHERE order_id in (	SELECT t.last_order_id 
+(SELECT user_id, CAST(days_since_prior as INT) FROM orders
+	WHERE order_id in (	SELECT t.last_order_id
 					   	FROM (
 						SELECT user_id,
 						MAX(order_id) as last_order_id
@@ -33,7 +33,7 @@ FULL JOIN
 	) t2
 ON
 	(t1.user_id=t2.user_id)
-	
+
 ORDER BY t1.user_id ASC
 ;
 
@@ -44,8 +44,8 @@ FROM
 		where eval_set='prior'
 		GROUP BY user_id) t1
 FULL JOIN
-(SELECT user_id, days_since_prior FROM orders 
-	WHERE order_number in (SELECT t.last_order 
+(SELECT user_id, days_since_prior FROM orders
+	WHERE order_number in (SELECT t.last_order
 					   	FROM (
 						SELECT user_id,
 						MAX(order_number) as last_order
@@ -56,12 +56,12 @@ FULL JOIN
 ) t2
 ON
 	(t1.user_id=t2.user_id)
-	
+
 ORDER BY t1.user_id ASC
 ;
 
 
 
 
-						
+
 

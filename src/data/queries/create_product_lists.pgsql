@@ -2,7 +2,7 @@
 DROP TABLE IF EXISTS product_adjacency_map;
 
 SELECT * INTO product_adjacency_map from
-(WITH tbl AS (SELECT 
+(WITH tbl AS (SELECT
     order_id,
     array_agg(product_id ORDER BY add_to_cart_order) AS prod_list
 FROM order_products__prior
@@ -29,7 +29,7 @@ tbl
 
 -- -- checking how many nodes and edges
 -- SELECT SUM(t.combinations) FROM (
--- SELECT 
+-- SELECT
 --     order_id,
 --     cardinality(array_agg(product_id ORDER BY add_to_cart_order)) AS prod_list,
 --     cardinality(array_agg(product_id ORDER BY add_to_cart_order)) * (cardinality(array_agg(product_id ORDER BY add_to_cart_order)) - 1)/2 as combinations
