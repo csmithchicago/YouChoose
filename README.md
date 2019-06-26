@@ -5,13 +5,15 @@ Analyze Instacart Data
 
 [![Coverage Status](https://coveralls.io/repos/github/csmithchicago/analyze_instacart_data/badge.svg?branch=master)](https://coveralls.io/github/csmithchicago/analyze_instacart_data?branch=master)
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
+
 Project Overview
 ------------
 
 In this project I seek to analyze transaction data released by Instacart in 2017 as part of a [Kaggle competition](https://www.kaggle.com/c/instacart-market-basket-analysis/overview). The following is directly from the competition overview.
 
 > Instacart’s data science team plays a big part in providing this delightful shopping experience. Currently they use transactional data to develop models that predict which products a user will buy again, try for the first time, or add to their cart next during a session. Recently, Instacart open sourced this data - see their blog post on [3 Million Instacart Orders, Open Sourced](https://tech.instacart.com/3-million-instacart-orders-open-sourced-d40d29ead6f2).
->In this competition, Instacart is challenging the Kaggle community to use this anonymized data on customer orders over time to predict which previously purchased products will be in a user’s next order. 
+>In this competition, Instacart is challenging the Kaggle community to use this anonymized data on customer orders over time to predict which previously purchased products will be in a user’s next order.
 
 Submissions are evaluated based on the mean F1 score. The format of submissions need to follow the following format.
 
