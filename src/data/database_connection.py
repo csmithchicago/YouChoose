@@ -24,7 +24,7 @@ class Database:
     Some more info about the class attributes and functions.
     """
 
-    def __init__(self, dotenv_path):
+    def __init__(self, dotenv_path, db_type="psql", db_name=""):
         """
         Initialize the database class with the path to the env file containing
         the database credentials.
@@ -35,11 +35,17 @@ class Database:
         DB_NAME = os.getenv("DB_NAME")
         DB_USER = os.getenv("DB_USER", "postgres")
         DB_HOST = os.getenv("DB_HOST", "")
+        
+        if db_type == "psql":
+            self.db_string = (
+                f"postgresql+psycopg2://{DB_USER}:"
+                f"{urllib.parse.quote_plus(DB_PASSWORD)}@{DB_HOST}/{DB_NAME}"
+            )
+        elif db_type == "sqlite":
+            self.db_string = f"sqlite:///{db_name}"
+        else:
+            raise ValueError("Database must be a postgres or sqlite database.")
 
-        self.db_string = (
-            f"postgresql+psycopg2://{DB_USER}:"
-            f"{urllib.parse.quote_plus(DB_PASSWORD)}@{DB_HOST}/{DB_NAME}"
-        )
         self.engine = create_engine(self.db_string)
         self.conn = self.engine.connect()
 
@@ -79,7 +85,6 @@ class Database:
         self.order_products__train = self.tables["order_products__train"]
         self.orders_test = self.tables["orders_test"]
         self.orders_no_tests = self.tables["orders_no_tests"]
-#         self.customer_products = self.tables["customer_products"]
 
     def save_layout(self, filename):
         """
