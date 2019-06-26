@@ -15,11 +15,6 @@ repos:
     hooks:
     -   id: trailing-whitespace
 
--   repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v1.4.3
-    hooks:
-    -   id: autopep8
-
 -   repo: https://github.com/asottile/seed-isort-config
     rev: v1.9.1
     hooks:
