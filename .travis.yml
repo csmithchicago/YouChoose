@@ -7,8 +7,14 @@ language: python
 python:
  - '3.7'
 
+cache:
+  pip: true
+  directories:
+    - "$HOME/.cache/pre-commit"
+
 install:
  - pip install -r requirements.txt
+ - pre-commit install
 
 script:
 - pre-commit run --all-files
@@ -16,4 +22,6 @@ script:
 
 after_success:
   - coverage report
+  - coverage xml
+  - python-codacy-coverage -r coverage.xml
   - coveralls
