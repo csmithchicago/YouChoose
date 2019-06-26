@@ -1,5 +1,4 @@
-Analyze Instacart Data
-==============================
+# Analyze Instacart Data
 
 [![Build Status](https://travis-ci.org/csmithchicago/analyze_instacart_data.svg?branch=master)](https://travis-ci.org/csmithchicago/analyze_instacart_data)
 
@@ -7,23 +6,22 @@ Analyze Instacart Data
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
-Project Overview
-------------
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/413dbdc41b89490da86758b6dc980d3c)](https://www.codacy.com/app/csmithchicago/analyze_instacart_data?utm_source=github.com&utm_medium=referral&utm_content=csmithchicago/analyze_instacart_data&utm_campaign=Badge_Grade)
+
+## Project Overview
 
 In this project I seek to analyze transaction data released by Instacart in 2017 as part of a [Kaggle competition](https://www.kaggle.com/c/instacart-market-basket-analysis/overview). The following is directly from the competition overview.
 
 > Instacart’s data science team plays a big part in providing this delightful shopping experience. Currently they use transactional data to develop models that predict which products a user will buy again, try for the first time, or add to their cart next during a session. Recently, Instacart open sourced this data - see their blog post on [3 Million Instacart Orders, Open Sourced](https://tech.instacart.com/3-million-instacart-orders-open-sourced-d40d29ead6f2).
->In this competition, Instacart is challenging the Kaggle community to use this anonymized data on customer orders over time to predict which previously purchased products will be in a user’s next order.
+> In this competition, Instacart is challenging the Kaggle community to use this anonymized data on customer orders over time to predict which previously purchased products will be in a user’s next order.
 
 Submissions are evaluated based on the mean F1 score. The format of submissions need to follow the following format.
 
->For each order_id in the test set, you should predict a space-delimited list of product_ids for that order. If you wish to predict an empty order, you should submit an explicit 'None' value. You may combine 'None' with product_ids. The spelling of 'None' is case sensitive in the scoring metric. The file should have a header and look like the following:
+> For each order_id in the test set, you should predict a space-delimited list of product_ids for that order. If you wish to predict an empty order, you should submit an explicit 'None' value. You may combine 'None' with product_ids. The spelling of 'None' is case sensitive in the scoring metric. The file should have a header and look like the following:
 >
->
-><p style="text-align: center;">order_id,products<br/>17,1 2 <br/>34,None<br/>137,1 2 3</p>
+> <p style="text-align: center;">order_id,products<br/>17,1 2 <br/>34,None<br/>137,1 2 3</p>
 
-Project Set-Up
-------------
+## Project Set-Up
 
 ### Virtual Environment and Clone Repository
 
@@ -42,8 +40,7 @@ The transaction data can be downloaded in a zip file from Instacart at the follo
 
 This can also be done by running `python ./src/data/get_instacart_data.py` from the command line. This will download the files and place them in the correct folder.
 
-Project Organization
-------------
+## Project Organization
 
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
@@ -93,9 +90,8 @@ Project Organization
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
 
---------
+* * *
 
-Project References
-------------
+## Project References
 
-* "The Instacart Online Grocery Shopping Dataset 2017", Accessed from [Instacart](https://www.instacart.com/datasets/grocery-shopping-2017) on 06-16-2019* Project based on the cookiecutter data science project [template](https://drivendata.github.io/cookiecutter-data-science/).
+-   "The Instacart Online Grocery Shopping Dataset 2017", Accessed from [Instacart](https://www.instacart.com/datasets/grocery-shopping-2017) on 06-16-2019\* Project based on the cookiecutter data science project [template](https://drivendata.github.io/cookiecutter-data-science/).
