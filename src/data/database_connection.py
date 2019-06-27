@@ -150,8 +150,8 @@ def psql_database_through_tunnel(private_key):
         engine (sqlalchmey engine): A sqlalchmey engine used to create the
             database connection.
     """
-    sshtunnel.SSH_TIMEOUT = 5.0
-    sshtunnel.TUNNEL_TIMEOUT = 5.0
+    sshtunnel.SSH_TIMEOUT = 30.0
+    sshtunnel.TUNNEL_TIMEOUT = 30.0
 
     ssh_db_dict = get_env_parameters()
 

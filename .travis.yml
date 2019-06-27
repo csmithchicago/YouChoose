@@ -21,3 +21,6 @@ after_success:
 before_install:
 - openssl aes-256-cbc -K $encrypted_c4d857cab805_key -iv $encrypted_c4d857cab805_iv
   -in instacart_resources.pem.enc -out instacart_resources.pem -d
+- eval "$(ssh-agent -s)"
+- chmod 600 instacart_resources.pem
+- ssh-add instacart_resources.pem
