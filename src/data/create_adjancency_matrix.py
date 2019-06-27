@@ -12,6 +12,9 @@ def create_adjancency_matrix(db, save_folder="../../data/interim/", num_orders=1
     """
     Make weighted adjacency matrix from the instacart database.
     """
+    if not isinstance(num_orders, int):
+        raise TypeError("Number of orders must be of type int.")
+
     query_string = """
         SELECT
             CAST (o.user_id AS INTEGER),
