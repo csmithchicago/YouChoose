@@ -14,7 +14,7 @@ import pandas as pd
 import sshtunnel
 from dotenv import find_dotenv, load_dotenv
 
-# from eralchemy import render_er
+from eralchemy import render_er
 from sqlalchemy import MetaData, create_engine
 
 
@@ -88,13 +88,13 @@ class Database:
         self.orders_test = self.tables["orders_test"]
         self.orders_no_tests = self.tables["orders_no_tests"]
 
-    #     def save_layout(self, filename):
-    #         """
-    #         Save the layout of the database to file.
+    def save_layout(self, filename):
+        """
+        Save the layout of the database to file.
 
-    #         Allowed filetypes are png, dot, er (markdown), and pdf.
-    #         """
-    #         render_er(self.db_string, filename)
+        Allowed filetypes are png, dot, er (markdown), and pdf.
+        """
+        render_er(self.metadata, filename)
 
     def close(self):
         """Shutdown database connection and ssh tunnel if open."""

@@ -1,3 +1,10 @@
+"""
+Tests for database class and connections.
+
+Copyright (c) 2019, Corey Smith
+Distributed under the MIT License.
+See LICENCE file for full terms.
+"""
 import os
 import inspect
 from pathlib import Path
@@ -8,13 +15,16 @@ import paramiko
 import sqlalchemy
 
 from src.data.database_connection import Database, psql_database_through_tunnel
+from src.data.create_adjancency_matrix import create_adjancency_matrix
 
 # @pytest.fixture
-# def postgres_db():
+# def postgres_db():  # will need a local postgres database for this test.
 #     """
 #     Initialise a database class connecting to a postgres database.
 #     """
 #     return Database()
+
+test_data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/")
 
 
 @pytest.fixture
@@ -35,19 +45,22 @@ def sqlite_db():
     """
     Initialise a database class connecting to the local sqlite test database.
     """
-    data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/")
-    return Database(db_type="sqlite", db_name=f"{data_dir}test_instacart_database.db")
+    return Database(
+        db_type="sqlite", db_name=f"{test_data_dir}test_instacart_database.db"
+    )
 
 
 def test_sqlite_table(sqlite_db):
     db_table = sqlite_db.table("person")
-    assert isinstance(db_table, sqlalchemy.sql.schema.Table)
+    if not isinstance(db_table, sqlalchemy.sql.schema.Table):
+        raise AssertionError()
 
 
 def test_postgres_table(postgres_db):
     db_table = postgres_db.table("orders")
     postgres_db.close()
-    assert isinstance(db_table, sqlalchemy.sql.schema.Table)
+    if not isinstance(db_table, sqlalchemy.sql.schema.Table):
+        raise AssertionError()
 
 
 def test_incorrect_db_type():
@@ -59,7 +72,8 @@ def test_db_query(postgres_db):
     query_str = "SELECT COUNT(*) FROM aisles;"
     json_result = postgres_db.get_dataframe(query_str).to_json()
     postgres_db.close()
-    assert json_result == '{"count":{"0":134}}'
+    if not json_result == '{"count":{"0":134}}':
+        raise AssertionError()
 
 
 def test_instacart_definition(postgres_db):
@@ -81,15 +95,39 @@ def test_instacart_definition(postgres_db):
         )
     ]
     postgres_db.close()
-    assert np.all([x in instacart_table_attributes for x in postgres_db.table_names])
+    if not np.all([x in instacart_table_attributes for x in postgres_db.table_names]):
+        raise AssertionError()
 
 
-# def test_diagram_save(postgres_db):
-#     test_filename = "db_diagram.png"
-#     postgres_db.save_layout(test_filename)
-#     postgres_db.close()
+def test_adjancency_matrix_creation(postgres_db):
+    num_orders = 10
+    create_adjancency_matrix(
+        postgres_db, save_folder=test_data_dir, num_orders=num_orders
+    )
 
-#     assert Path(test_filename).exists()
+    full_info_filename = Path(
+        test_data_dir + "full_info_{}_prior_orders.csv".format(num_orders)
+    )
+    weighted_matrix_filename = Path(
+        test_data_dir + "weighted_adjacency_matrix_{}_orders.csv".format(num_orders)
+    )
 
-#     if Path(test_filename).exists():
-#         Path(test_filename).unlink()
+    if full_info_filename.exists():
+        full_info_filename.unlink()
+    else:
+        raise AssertionError()
+    if weighted_matrix_filename.exists():
+        weighted_matrix_filename.unlink()
+    else:
+        raise AssertionError()
+
+
+def test_diagram_save(postgres_db):
+    test_filename = test_data_dir + "db_diagram.png"
+    postgres_db.save_layout(test_filename)
+    postgres_db.close()
+
+    if Path(test_filename).exists():
+        Path(test_filename).unlink()
+    else:
+        raise AssertionError()
