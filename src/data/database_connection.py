@@ -10,9 +10,11 @@ See LICENCE file for full terms.
 import os
 import urllib.parse
 
-import dotenv
 import pandas as pd
-from eralchemy import render_er
+import sshtunnel
+from dotenv import find_dotenv, load_dotenv
+
+# from eralchemy import render_er
 from sqlalchemy import MetaData, create_engine
 
 
@@ -24,30 +26,29 @@ class Database:
     Some more info about the class attributes and functions.
     """
 
-    def __init__(self, dotenv_path, db_type="psql", db_name="", use_dotenv=True):
+    def __init__(self, db_type="psql", db_name="", engine=None, tunnel=None):
         """
         Initialize the database class with the path to the env file containing
         the database credentials.
+
+        Args:
+            engine (sqlalchemy engine): Giving an engine object allows for a
+                ssh tunnel to be set-up and to connect the database through it.
         """
-        if use_dotenv:
-            _ = dotenv.load_dotenv(dotenv_path=dotenv_path)
 
-        DB_PASSWORD = os.getenv("DB_PASSWORD", "")
-        DB_NAME = os.getenv("DB_NAME")
-        DB_USER = os.getenv("DB_USER", "postgres")
-        DB_HOST = os.getenv("DB_HOST", "")
+        if db_type == "psql" and engine is None:
+            engine = psql_engine()
 
-        if db_type == "psql":
-            self.db_string = (
-                f"postgresql+psycopg2://{DB_USER}:"
-                f"{urllib.parse.quote_plus(DB_PASSWORD)}@{DB_HOST}/{DB_NAME}"
+        elif db_type == "sqlite" and engine is None:
+            engine = create_engine("sqlite:///{}".format(db_name))
+
+        if engine is None:
+            raise ValueError(
+                "Database type must be postgres or sqlite if no engine is given."
             )
-        elif db_type == "sqlite":
-            self.db_string = f"sqlite:///{db_name}"
-        else:
-            raise ValueError("Database must be a postgres or sqlite database.")
 
-        self.engine = create_engine(self.db_string)
+        self.tunnel = tunnel
+        self.engine = engine
         self.conn = self.engine.connect()
 
         self.metadata = MetaData()
@@ -87,10 +88,101 @@ class Database:
         self.orders_test = self.tables["orders_test"]
         self.orders_no_tests = self.tables["orders_no_tests"]
 
-    def save_layout(self, filename):
-        """
-        Save the layout of the database to file.
+    #     def save_layout(self, filename):
+    #         """
+    #         Save the layout of the database to file.
 
-        Allowed filetypes are png, dot, er (markdown), and pdf.
-        """
-        render_er(self.db_string, filename)
+    #         Allowed filetypes are png, dot, er (markdown), and pdf.
+    #         """
+    #         render_er(self.db_string, filename)
+
+    def close(self):
+        """Shutdown database connection and ssh tunnel if open."""
+        self.conn.close()
+        self.engine.dispose()
+
+        if self.tunnel is not None:
+            self.tunnel.stop()
+            self.tunnel.close()
+
+
+def get_env_parameters():
+    """
+    Load in environment variables for database and ssh connections.
+
+    Return:
+        env_dict: A dictionary of the variables needed for ssh and database
+            connections.
+    """
+    _ = load_dotenv(find_dotenv())  # evaluates to True
+
+    env_dict = {
+        "HOST_IP": os.getenv("HOST_IP", ""),
+        "HOST_USER": os.getenv("HOST_USER", ""),
+        "SSH_PORT": int(os.getenv("SSH_PORT", 22)),
+        "DB_PORT": int(os.getenv("DB_PORT", 5432)),
+        "DB_NAME": os.getenv("DB_NAME"),
+        "DB_USER": os.getenv("DB_USER", "postgres"),
+        "DB_PASSWORD": urllib.parse.quote_plus(os.getenv("DB_PASSWORD", "")),
+        "DB_HOST": os.getenv("DB_HOST"),
+    }
+
+    return env_dict
+
+
+def psql_database_through_tunnel(private_key):
+    """
+    Connect to a postgres database through a ssh tunnel.
+
+    Use to connect to a database that is not accessible through a
+    public ip address.
+    Args:
+        private_key (RSA key): RSA key used to connect with host computer.
+        HOST_IP (IP address): IP for the host to tunnel to.
+        SSH_PORT (int): Open port on host to ssh through.
+        HOST_USER (str): Username on host computer.
+        DB_HOST: Hostname/endpoint of the postgres database.
+        DB_PORT (int): Open port on database for connection.
+        DB_USER: Username for the database.
+        DB_PASSWORD: Password for the database user.
+        DB_NAME: Name of the database to connect to.
+    Return:
+        engine (sqlalchmey engine): A sqlalchmey engine used to create the
+            database connection.
+    """
+    sshtunnel.SSH_TIMEOUT = 5.0
+    sshtunnel.TUNNEL_TIMEOUT = 5.0
+
+    ssh_db_dict = get_env_parameters()
+
+    tunnel = sshtunnel.SSHTunnelForwarder(
+        (ssh_db_dict.get("HOST_IP"), ssh_db_dict.get("SSH_PORT")),
+        ssh_username=ssh_db_dict.get("HOST_USER"),
+        ssh_pkey=private_key,
+        remote_bind_address=(ssh_db_dict.get("DB_HOST"), ssh_db_dict.get("DB_PORT")),
+    )
+    tunnel.start()
+
+    return psql_engine(tunnel=tunnel), tunnel
+
+
+def psql_engine(tunnel=None):
+    """
+    Create a sqlalchmey engine used for creating the
+    database connection.
+    """
+    env_dict = get_env_parameters()
+
+    if tunnel is not None:
+        db_conn = "localhost:{}".format(tunnel.local_bind_port)
+    else:
+        db_conn = env_dict.get("DB_HOST")
+
+    db_user = "postgresql+psycopg2://{}:{}@".format(
+        env_dict.get("DB_USER"), env_dict.get("DB_PASSWORD")
+    )
+    db_name = "/{}".format(env_dict.get("DB_NAME"))
+
+    db_string = db_user + db_conn + db_name
+
+    return create_engine(db_string)

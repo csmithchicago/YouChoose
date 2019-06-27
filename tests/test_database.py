@@ -4,22 +4,30 @@ from pathlib import Path
 
 import numpy as np
 import pytest
+import paramiko
 import sqlalchemy
 
-from src.data.database_connection import Database
+from src.data.database_connection import Database, psql_database_through_tunnel
+
+# @pytest.fixture
+# def postgres_db():
+#     """
+#     Initialise a database class connecting to a postgres database.
+#     """
+#     return Database()
 
 
 @pytest.fixture
 def postgres_db():
     """
-    Initialise a database class connecting to a postgres database.
-
-    For local tests, the database variables will need to be exported to the
-    environment prior to running pytest. This can be done from the command
-    line with `export $(grep -v '^#' .env | xargs)` in the same folder
-    as the .env file.
+    Initialise a database class connecting to a postgres database through
+    a ssh tunnel to allow for remote testing.
     """
-    return Database("", use_dotenv=False)
+    key_file = next(Path("../../").rglob("instacart_resources.pem"))
+    private_key = paramiko.RSAKey.from_private_key_file(key_file)
+    engine, tunnel = psql_database_through_tunnel(private_key)
+
+    return Database(engine=engine, tunnel=tunnel)
 
 
 @pytest.fixture
@@ -28,11 +36,7 @@ def sqlite_db():
     Initialise a database class connecting to the local sqlite test database.
     """
     data_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/")
-    return Database(
-        "./data/.test_env",
-        db_type="sqlite",
-        db_name=f"{data_dir}test_instacart_database.db",
-    )
+    return Database(db_type="sqlite", db_name=f"{data_dir}test_instacart_database.db")
 
 
 def test_sqlite_table(sqlite_db):
@@ -42,17 +46,19 @@ def test_sqlite_table(sqlite_db):
 
 def test_postgres_table(postgres_db):
     db_table = postgres_db.table("orders")
+    postgres_db.close()
     assert isinstance(db_table, sqlalchemy.sql.schema.Table)
 
 
 def test_incorrect_db_type():
     with pytest.raises(ValueError):
-        Database("", use_dotenv=False, db_type="mysql")
+        Database(db_type="mysql")
 
 
 def test_db_query(postgres_db):
     query_str = "SELECT COUNT(*) FROM aisles;"
     json_result = postgres_db.get_dataframe(query_str).to_json()
+    postgres_db.close()
     assert json_result == '{"count":{"0":134}}'
 
 
@@ -74,15 +80,16 @@ def test_instacart_definition(postgres_db):
             a[0].startswith("__") and a[0].endswith("__") or a[0] in ignored_attributes
         )
     ]
-
+    postgres_db.close()
     assert np.all([x in instacart_table_attributes for x in postgres_db.table_names])
 
 
-def test_diagram_save(postgres_db):
-    test_filename = "db_diagram.png"
-    postgres_db.save_layout(test_filename)
+# def test_diagram_save(postgres_db):
+#     test_filename = "db_diagram.png"
+#     postgres_db.save_layout(test_filename)
+#     postgres_db.close()
 
-    assert Path(test_filename).exists()
+#     assert Path(test_filename).exists()
 
-    if Path(test_filename).exists():
-        Path(test_filename).unlink()
+#     if Path(test_filename).exists():
+#         Path(test_filename).unlink()

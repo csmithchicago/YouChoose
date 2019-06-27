@@ -85,3 +85,4 @@ target/
 # Mypy cache
 .mypy_cache/
 key_token_test_vault
+*.pem

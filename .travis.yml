@@ -1,27 +1,23 @@
 sudo: required
-
 dist: xenial
-
 language: python
-
 python:
- - '3.7'
-
+- '3.7'
 cache:
   pip: true
   directories:
-    - "$HOME/.cache/pre-commit"
-
+  - "$HOME/.cache/pre-commit"
 install:
- - pip install -r requirements.txt
- - pre-commit install
-
+- pip install -r requirements.txt
+- pre-commit install
 script:
 - pre-commit run --all-files
 - coverage run --branch --source . -m pytest
-
 after_success:
-  - coverage report
-  - coverage xml
-  - python-codacy-coverage -r coverage.xml
-  - coveralls
+- coverage report
+- coverage xml
+- python-codacy-coverage -r coverage.xml
+- coveralls
+before_install:
+- openssl aes-256-cbc -K $encrypted_c4d857cab805_key -iv $encrypted_c4d857cab805_iv
+  -in instacart_resources.pem.enc -out instacart_resources.pem -d
