@@ -8,6 +8,7 @@ cache:
   directories:
   - "$HOME/.cache/pre-commit"
 install:
+- sudo apt-get install graphviz
 - pip install -r requirements.txt
 - pre-commit install
 script:
