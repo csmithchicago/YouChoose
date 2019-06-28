@@ -1,18 +1,14 @@
-.. Analyze Instacart Data documentation master file, created by
-   sphinx-quickstart.
+.. Recommender Systems documentation master file, created by
+   sphinx-quickstart on Fri Jun 28 17:32:35 2019.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Analyze Instacart Data documentation!
-==============================================
-
-Contents:
+Welcome to Recommender Systems's documentation!
+===============================================
 
 .. toctree::
    :maxdepth: 2
-
-   getting-started
-   commands
+   :caption: Contents:
 
 
 
