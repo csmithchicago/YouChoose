@@ -1,12 +1,10 @@
 # Analyze Instacart Data
 
 [![Build Status](https://travis-ci.org/csmithchicago/analyze_instacart_data.svg?branch=master)](https://travis-ci.org/csmithchicago/analyze_instacart_data)
-
 [![Coverage Status](https://coveralls.io/repos/github/csmithchicago/analyze_instacart_data/badge.svg?branch=master)](https://coveralls.io/github/csmithchicago/analyze_instacart_data?branch=master)
-
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
-
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/413dbdc41b89490da86758b6dc980d3c)](https://www.codacy.com/app/csmithchicago/analyze_instacart_data?utm_source=github.com&utm_medium=referral&utm_content=csmithchicago/analyze_instacart_data&utm_campaign=Badge_Grade)
+[![Documentation Status](https://readthedocs.org/projects/analyze-instacart-data/badge/?version=latest)](https://analyze-instacart-data.readthedocs.io/en/latest/?badge=latest)
 
 ## Project Overview
 
