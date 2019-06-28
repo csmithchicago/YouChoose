@@ -86,3 +86,4 @@ target/
 .mypy_cache/
 key_token_test_vault
 *.pem
+data/external/instacart_2017_05_01/
