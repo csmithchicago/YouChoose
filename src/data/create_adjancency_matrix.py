@@ -1,10 +1,10 @@
+# Copyright (c) 2019, Corey Smith
+# Distributed under the MIT License.
+# See LICENCE file in root directory for full terms.
 """
 Create two small prototype csv files for use when creating
 and testing analysis and visualization functions.
 
-Copyright (c) 2019, Corey Smith
-Distributed under the MIT License.
-See LICENCE file for full terms.
 """
 
 

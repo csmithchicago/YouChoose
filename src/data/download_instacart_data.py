@@ -1,4 +1,10 @@
-""" download and unzip instacart data """
+# Copyright (c) 2019, Corey Smith
+# Distributed under the MIT License.
+# See LICENCE file in root directory for full terms.
+"""
+Download and unzip instacart data.
+
+"""
 import os
 import shutil
 from datetime import datetime

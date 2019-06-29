@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+# Copyright (c) 2019, Corey Smith
+# Distributed under the MIT License.
+# See LICENCE file in root directory for full terms.
+"""
+Process the raw data.
+"""
 import logging
 from pathlib import Path
 

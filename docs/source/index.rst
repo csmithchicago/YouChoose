@@ -5,7 +5,10 @@ Welcome to Recommender Systems's documentation!
    :maxdepth: 3
    :caption: Contents:
 
+   getting_started.rst
+   installation.rst
    modules.rst
+
 
 
 
