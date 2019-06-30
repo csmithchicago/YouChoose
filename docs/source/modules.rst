@@ -1,7 +1,7 @@
-src
-===
+recommender
+===========
 
 .. toctree::
    :maxdepth: 4
 
-   src
+   recommender
