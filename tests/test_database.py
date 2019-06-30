@@ -14,8 +14,11 @@ import pytest
 import paramiko
 import sqlalchemy
 
-from src.data.database_connection import Database, psql_database_through_tunnel
-from src.data.create_adjancency_matrix import create_adjancency_matrix
+from recommender.data_gen.database_connection import (
+    Database,
+    psql_database_through_tunnel,
+)
+from recommender.data_gen.create_adjancency_matrix import create_adjancency_matrix
 
 # @pytest.fixture
 # def postgres_db():  # will need a local postgres database for this test.
