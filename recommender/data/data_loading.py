@@ -10,6 +10,7 @@ import numpy as np
 import torch
 import pandas as pd
 from torch.utils.data import Dataset, DataLoader
+from typing import Optional
 
 
 def product_sets(df: pd.DataFrame) -> dict:
@@ -25,7 +26,7 @@ def product_sets(df: pd.DataFrame) -> dict:
     df_g = (
         df[["user_id", "product_id"]]
         .groupby(["user_id"])["product_id"]
-        .agg(lambda x: set([val for val in x]))
+        .agg(lambda x: {val for val in x})
     )
     df_g = df_g.reset_index()
     df_g.columns = ["user_id", "product_list"]
@@ -53,7 +54,7 @@ class RatingsDataset(Dataset):
         product_dict: dict,
         user_dict: dict,
         dev=torch.device("cpu"),
-        reweighting: dict = dict(),
+        reweighting: Optional[dict] = None,
         num_negs: int = 0,
     ):
         """
@@ -73,7 +74,7 @@ class RatingsDataset(Dataset):
         self.prod_sets = product_sets(dataframe)
         self.p_dict = product_dict
         self.u_dict = user_dict
-        self.w_dict = reweighting
+        self.w_dict = reweighting if reweighting is not None else dict()
         self.num_prods = len(product_dict)
         self.num_users = len(user_dict)
         self.dev = dev
