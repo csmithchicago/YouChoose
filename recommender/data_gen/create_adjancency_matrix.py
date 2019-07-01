@@ -99,6 +99,6 @@ def create_adjancency_matrix(db, save_folder="../../data/interim/", num_orders=1
 
 
 if __name__ == "__main__":
-    from database_connection import Database
+    from .database_connection import Database
 
     create_adjancency_matrix(Database())

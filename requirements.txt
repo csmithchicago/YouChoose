@@ -184,7 +184,7 @@ sphinxcontrib-qthelp==1.0.2
 sphinxcontrib-serializinghtml==1.1.3
 sphinxcontrib-websupport==1.1.2
 SQLAlchemy==1.3.5
--e git+git@github.com:csmithchicago/analyze_instacart_data.git@53fb55fcee657a0a5dbbe53085a7be0021b40f2e#egg=src
+-e git+git@github.com:csmithchicago/analyze_instacart_data.git@0d8d8e85c23bfadfc7dada9d76b8677fbb06bce0#egg=src
 srsly==0.0.5
 sshtunnel==0.1.5
 terminado==0.8.2
