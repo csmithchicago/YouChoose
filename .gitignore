@@ -86,4 +86,9 @@ target/
 .mypy_cache/
 key_token_test_vault
 *.pem
-data/external/instacart_2017_05_01/
+
+# Ignore contents of data folders unless force added
+data/external/*
+data/processed/*
+data/interim/*
+data/raw/*
