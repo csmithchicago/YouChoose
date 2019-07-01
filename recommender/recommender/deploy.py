@@ -11,9 +11,11 @@ def aws_s3(model: Recommender):
     model.save()
     pass
 
+
 def aws_sagemaker(model: Recommender):
     model.save()
     pass
+
 
 def gcp_cloudstorage(model: Recommender):
     model.save()

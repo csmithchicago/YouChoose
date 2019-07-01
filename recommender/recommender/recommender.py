@@ -5,6 +5,7 @@
 The recommender class.
 """
 
+
 class Recommender:
     """ Recommender Base class."""
 
