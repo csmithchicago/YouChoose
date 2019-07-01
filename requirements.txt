@@ -138,7 +138,7 @@ sshtunnel==0.1.5
 terminado==0.8.2
 testpath==0.4.2
 toml==0.10.0
-torch==1.1.0
+torch==1.1.0.post2
 torchvision==0.3.0
 tornado==6.0.3
 tqdm==4.32.2
