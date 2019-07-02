@@ -1,4 +1,4 @@
-Welcome to YouChoose's documentation!
+Welcome to YouChoose's Documentation!
 ===============================================
 
 .. toctree::
@@ -8,8 +8,6 @@ Welcome to YouChoose's documentation!
    getting_started.rst
    installation.rst
    modules.rst
-
-
 
 
 Indices and tables
