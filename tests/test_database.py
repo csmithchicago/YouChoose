@@ -1,9 +1,9 @@
+# Copyright (c) 2019, Corey Smith
+# Distributed under the MIT License.
+# See LICENCE file for full terms.
 """
 Tests for database class and connections.
 
-Copyright (c) 2019, Corey Smith
-Distributed under the MIT License.
-See LICENCE file for full terms.
 """
 import os
 import inspect
@@ -14,11 +14,11 @@ import pytest
 import paramiko
 import sqlalchemy
 
-from recommender.data_gen.database_connection import (
+from youchoose.data_gen.database_connection import (
     Database,
     psql_database_through_tunnel,
 )
-from recommender.data_gen.create_adjancency_matrix import create_adjancency_matrix
+from youchoose.data_gen.create_adjancency_matrix import create_adjancency_matrix
 
 # @pytest.fixture
 # def postgres_db():  # will need a local postgres database for this test.
