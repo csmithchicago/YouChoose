@@ -1,4 +1,4 @@
-Welcome to Recommender Systems's documentation!
+Welcome to YouChoose's documentation!
 ===============================================
 
 .. toctree::

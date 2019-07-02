@@ -1,2 +1,2 @@
-Installing Recommender Systems
+Installing YouChoose
 ===============================================
