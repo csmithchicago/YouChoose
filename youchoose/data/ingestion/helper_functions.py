@@ -43,14 +43,15 @@ def ssh_tunnel(private_key):
     public ip address. To open the connections, the following variables need to either
     be exported as environment variables or located in a .env file in the project's
     root directory.
-        HOST_IP (IP address) - IP for the host to tunnel to.
-        SSH_PORT (int) - Open port on host to ssh through.
-        HOST_USER (str) - Username on host computer.
-        DB_HOST - Hostname/endpoint of the postgres database.
-        DB_PORT (int) - Open port on database for connection.
-        DB_USER - Username for the database.
-        DB_PASSWORD - Password for the database user.
-        DB_NAME - Name of the database to connect to.
+
+    HOST_IP (IP address) - IP for the host to tunnel to.
+    SSH_PORT (int) - Open port on host to ssh through.
+    HOST_USER (str) - Username on host computer.
+    DB_HOST - Hostname/endpoint of the postgres database.
+    DB_PORT (int) - Open port on database for connection.
+    DB_USER - Username for the database.
+    DB_PASSWORD - Password for the database user.
+    DB_NAME - Name of the database to connect to.
 
     Args:
         private_key (paramiko.RSAKey): RSA key used to connect with host computer.
