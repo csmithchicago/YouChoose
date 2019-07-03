@@ -37,7 +37,7 @@ crate-docs-theme==0.5.78
 cryptography==2.6.1
 cycler==0.10.0
 cymem==2.0.2
-Cython==0.29.7
+Cython==0.29.11
 cytoolz==0.9.0.1
 decorator==4.4.0
 defusedxml==0.6.0
