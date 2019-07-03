@@ -45,7 +45,7 @@ Here are a couple of friendly tutorials you can include: http://makeapullrequest
 
 > Working on your first Pull Request? You can learn how from this *free* series, [How to Contribute to an Open Source Project on GitHub](https://egghead.io/series/how-to-contribute-to-an-open-source-project-on-github).
 
-[source: [React](https://github.com/facebook/react/blob/master/CONTRIBUTING.md#pull-requests)]  
+[source: [React](https://github.com/facebook/react/blob/master/CONTRIBUTING.md#pull-requests)]
 
 As a side note, it helps to use newcomer-friendly language throughout the rest of your document. Here are a couple of examples from [Active Admin](https://github.com/activeadmin/activeadmin/blob/master/CONTRIBUTING.md):
 
