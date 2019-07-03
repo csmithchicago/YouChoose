@@ -40,4 +40,3 @@ pip install -r requirements.txt
 ```
 
 ## Project References
-
