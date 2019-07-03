@@ -9,6 +9,34 @@ import torch
 import torch.nn as nn
 
 
+class ScaledEmbedding(nn.Embedding):
+    """
+    Embedding layer that initialises its values with a normal distribution.
+    The variance is set to the inverse of the embedding dimension squared.
+
+    .. math:: weights ~ N(0, (\frac{1}{n_d})^2)
+    """
+
+    def reset_parameters(self):
+        """
+        Initialize parameters.
+        """
+        self.weight.data.normal_(0, 1.0 / self.embedding_dim)
+
+
+class ZeroEmbedding(nn.Embedding):
+    """
+    Embedding layer that initialises its values
+    to zero. Used for biases.
+    """
+
+    def reset_parameters(self):
+        """
+        Initialize parameters.
+        """
+        self.weight.data.zero_()
+
+
 class MatrixFactorization(torch.nn.Module):
     """Matrix factorization using pytorch."""
 
@@ -37,16 +65,17 @@ class MatrixFactorization(torch.nn.Module):
         self.l2 = l2
         self.lr = lr
         self.momentum = momentum
-        self.user_factors = nn.Embedding(n_users, n_factors)
-        self.product_factors = nn.Embedding(n_products, n_factors)
-        self.user_bias = nn.Embedding(n_users, 1)
-        self.product_bias = nn.Embedding(n_products, 1)
+        self.user_factors = ScaledEmbedding(n_users, n_factors)
+        self.product_factors = ScaledEmbedding(n_products, n_factors)
+        self.user_bias = ZeroEmbedding(n_users, 1)
+        self.product_bias = ZeroEmbedding(n_products, 1)
 
         self.activation = activation()
         self.loss_fn = loss_fn()
         self.optimizer = optimizer(
             self.parameters(), lr=self.lr, weight_decay=self.l2, momentum=self.momentum
         )
+        self.grad = None
 
     def forward(self, user, item):
         """
@@ -103,8 +132,8 @@ class MatrixFactorization(torch.nn.Module):
         train_loss = 0
         correct = 0
         total = 0
-        self.train()
 
+        self.train()
         for user, item, rating in data_loader:
             self.optimizer.zero_grad()
 
