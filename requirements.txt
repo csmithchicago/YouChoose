@@ -41,7 +41,7 @@ Cython==0.29.7
 cytoolz==0.9.0.1
 decorator==4.4.0
 defusedxml==0.6.0
-dill==0.2.9
+dill==0.3.0
 docutils==0.14
 dodgy==0.1.9
 entrypoints==0.3
