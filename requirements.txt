@@ -89,7 +89,7 @@ mccabe==0.6.1
 mistune==0.8.4
 more-itertools==7.0.0
 murmurhash==1.0.2
-mwparserfromhell==0.5.3
+mwparserfromhell==0.5.4
 mypy==0.711
 mypy-extensions==0.4.1
 nbconvert==5.5.0
