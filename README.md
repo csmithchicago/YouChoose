@@ -5,6 +5,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/413dbdc41b89490da86758b6dc980d3c)](https://www.codacy.com/app/csmithchicago/YouChoose?utm_source=github.com&utm_medium=referral&utm_content=csmithchicago/YouChoose&utm_campaign=Badge_Grade)
 [![Documentation Status](https://readthedocs.org/projects/youchoose/badge/?version=latest)](https://youchoose.readthedocs.io/en/latest/?badge=latest)
+[![PyPI version](https://badge.fury.io/py/youchoose.svg)](https://badge.fury.io/py/youchoose)
 
 ## Project Overview
 
