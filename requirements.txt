@@ -22,7 +22,7 @@ blis==0.2.4
 boto3==1.9.176
 botocore==1.12.176
 cached-property==1.5.1
-cachetools==3.1.0
+cachetools==3.1.1
 certifi==2019.3.9
 cffi==1.12.2
 cfgv==2.0.0
