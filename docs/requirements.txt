@@ -148,6 +148,6 @@ wcwidth==0.1.7
 webencodings==0.5.1
 WebOb==1.8.5
 WebTest==2.0.33
-widgetsnbextension==3.4.2
+widgetsnbextension==3.5.0
 yapf==0.27.0
 zipp==0.5.1
