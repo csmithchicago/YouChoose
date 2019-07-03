@@ -140,7 +140,7 @@ pyOpenSSL==19.0.0
 pyparsing==2.4.0
 Pyphen==0.9.5
 pyrsistent==0.15.2
-PySocks==1.6.8
+PySocks==1.7.0
 pytest==4.6.3
 pytest-cov==2.7.1
 python-coveralls==2.9.2
