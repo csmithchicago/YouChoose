@@ -1,4 +1,4 @@
-Welcome to YouChoose's Documentation!
+Welcome to the YouChoose Documentation!
 ===============================================
 
 .. toctree::

@@ -1,4 +1,4 @@
-youchoose
+YouChoose
 =========
 
 .. toctree::
