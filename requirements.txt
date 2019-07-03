@@ -107,7 +107,7 @@ pep8-naming==0.4.1
 pexpect==4.7.0
 pickleshare==0.7.5
 Pillow==6.0.0
-plac==0.9.6
+plac==1.0.0
 pluggy==0.12.0
 pockets==0.7.2
 pony==0.7.10
