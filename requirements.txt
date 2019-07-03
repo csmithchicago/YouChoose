@@ -207,7 +207,7 @@ WebTest==2.0.33
 wget==3.2
 whichcraft==0.5.2
 widgetsnbextension==3.4.2
-wrapt==1.11.1
+wrapt==1.11.2
 xgboost==0.82
 yapf==0.27.0
 zipp==0.5.1
