@@ -12,7 +12,7 @@ import pandas as pd
 from torch.utils.data import Dataset, DataLoader
 from typing import Optional
 
-from data_processing import item_sets, dataframe_split, list_to_indexed_dict
+from .data_processing import item_sets, dataframe_split, list_to_indexed_dict
 
 
 class InteractionsDataset(Dataset):
