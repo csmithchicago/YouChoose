@@ -35,7 +35,7 @@ The following command is then run to clone the repository.
 git clone https://github.com/csmithchicago/YouChoose.git
 
 source bin/activate
-cd youchoose
+cd YouChoose
 pip install -r requirements.txt
 ```
 
