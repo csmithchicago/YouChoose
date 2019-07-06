@@ -8,6 +8,7 @@ Neural network matrix factorization library.
 import torch
 import torch.nn as nn
 from tqdm import tqdm
+from pathlib import Path
 
 
 class ScaledEmbedding(nn.Embedding):
@@ -83,8 +84,9 @@ class MatrixFactorization(torch.nn.Module):
         Matrix multiplication between user and product
         embedding vectors.
         """
-        mat_mult = (self.user_bias(user) + self.product_bias(item)).squeeze(2)
-        mat_mult += ((self.user_factors(user)) * (self.product_factors(item))).sum(2)
+        item_emb = self.product_factors(item) + self.product_bias(item)
+        user_emb = self.user_factors(user) + self.user_bias(user)
+        mat_mult = (item_emb * user_emb).sum(1)
 
         return mat_mult
 
@@ -118,7 +120,7 @@ class MatrixFactorization(torch.nn.Module):
 
         self.eval()
         with torch.no_grad():
-            for user, item, true_rating in data_loader:
+            for user, item, true_rating in tqdm(data_loader):
                 predicted = self.prediction(user, item)
                 total += predicted.numel()
                 correct += (predicted == true_rating).sum().item()
@@ -135,7 +137,7 @@ class MatrixFactorization(torch.nn.Module):
         total = 0
 
         self.train()
-        for user, item, rating in tqdm(data_loader):
+        for user, item, rating in data_loader:
             self.optimizer.zero_grad()
 
             forward = self(user, item)
@@ -171,3 +173,59 @@ class MatrixFactorization(torch.nn.Module):
                 correct += (predicted == rating).sum().item()
 
         return val_loss, f"{(100 * correct / total):.2f}"
+
+    @classmethod
+    def load(
+        cls,
+        saved_filename,
+        optimizer=torch.optim.SGD,
+        lr=0.001,
+        l2=0,
+        momentum=0,
+        loss_fn=nn.BCEWithLogitsLoss,
+        activation=nn.Sigmoid,
+    ):
+        """
+        """
+        if not Path(saved_filename).exists():
+            raise ValueError("Filename does not exist.")
+        pass
+
+    #         model_save = torch.load(saved_filename)
+
+    #         # before training user-item interaction matrix
+    #         user_em = model_save["user_factors.weight"]
+    #         item_em = model_save["product_factors.weight"]
+    #         user_b = model_save["user_bias.weight"]
+    #         item_b = model_save["product_bias.weight"]
+
+    #         user_item_array = ((item_em + item_b) @ (user_em + user_b).transpose(0,1))
+    #         pre_probs = model.activation(user_item_array).numpy()
+    #         pre_preds = model._prob_to_class(user_item_array).numpy()
+
+    #         cls(
+    #             n_users,
+    #             n_products,
+    #             n_factors=20,
+    #             optimizer=torch.optim.SGD,
+    #             lr=0.001,
+    #             l2=0,
+    #             momentum=0,
+    #             loss_fn=nn.BCEWithLogitsLoss,
+    #             activation=nn.Sigmoid,
+    #         )
+    def create_user_item_array(self):
+        """
+        Use the trained embedding vectors to compute the predicted
+        interaction for all users.
+        """
+        user_em = self.user_factors.weight.detach()
+        item_em = self.product_factors.weight.detach()
+        user_b = self.user_bias.weight.detach()
+        item_b = self.product_bias.weight.detach()
+
+        user_item_array = (item_em + item_b) @ (user_em + user_b).transpose(0, 1)
+        probs = self.activation(user_item_array)
+        preds = self._prob_to_class(probs).numpy()
+
+        return preds

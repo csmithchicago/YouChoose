@@ -95,7 +95,7 @@ class InteractionsDataset(Dataset):
         """
         Replace dataframe with index values and convert to torch.Tensor
         """
-        transformed = pd.Series(df_rows).replace(mapping).to_numpy()
+        transformed = df_rows.replace(mapping).to_numpy()
 
         return torch.from_numpy(transformed).to(self.dev)
 
