@@ -19,10 +19,10 @@ def dataframe_split(df, train_frac=0.80, test_frac=0.10):
     return train_df, val_df, test_df
 
 
-def item_sets(df: pd.DataFrame) -> dict:
+def item_sets(df: pd.DataFrame, users: str = "user_id", items: str = "item_id") -> dict:
     """
-    Generate sets for each user containing products that
-    they have previously purchased.
+    Generate sets for each user containing items that
+    they have previously interacted with.
 
     Args:
         df: Dataframe containing user_id and item_id columns.
@@ -30,14 +30,10 @@ def item_sets(df: pd.DataFrame) -> dict:
         prior_dict: Dictionary of users and a set of items that they have previously
             interacted with.
     """
-    df_g = (
-        df[["user_id", "item_id"]]
-        .groupby(["user_id"])["item_id"]
-        .agg(lambda x: {val for val in x})
-    )
+    df_g = df[[users, items]].groupby([users])[items].agg(lambda x: {val for val in x})
     df_g = df_g.reset_index()
-    df_g.columns = ["user_id", "item_list"]
-    prior_dict = df_g.set_index("user_id").to_dict()["item_list"]
+    df_g.columns = [users, "item_list"]
+    prior_dict = df_g.set_index(users).to_dict()["item_list"]
 
     return prior_dict
 

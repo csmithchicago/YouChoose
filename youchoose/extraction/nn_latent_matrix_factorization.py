@@ -7,6 +7,7 @@ Neural network matrix factorization library.
 """
 import torch
 import torch.nn as nn
+from tqdm import tqdm
 
 
 class ScaledEmbedding(nn.Embedding):
@@ -134,7 +135,7 @@ class MatrixFactorization(torch.nn.Module):
         total = 0
 
         self.train()
-        for user, item, rating in data_loader:
+        for user, item, rating in tqdm(data_loader):
             self.optimizer.zero_grad()
 
             forward = self(user, item)

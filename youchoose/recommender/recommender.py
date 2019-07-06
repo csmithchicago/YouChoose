@@ -12,7 +12,7 @@ class Recommender:
     def train(self):
         pass
 
-    def serve(self):
+    def evaluate(self):
         pass
 
     def save(self):
@@ -22,4 +22,7 @@ class Recommender:
         pass
 
     def deploy(self):
+        pass
+
+    def recommend_top(self):
         pass
