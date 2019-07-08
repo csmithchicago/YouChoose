@@ -77,15 +77,16 @@ class MatrixFactorization(torch.nn.Module):
         self.optimizer = optimizer(
             self.parameters(), lr=self.lr, weight_decay=self.l2, momentum=self.momentum
         )
-        self.grad = None
 
     def forward(self, user, item):
         """
         Matrix multiplication between user and product
         embedding vectors.
         """
-        item_emb = self.product_factors(item) + self.product_bias(item)
-        user_emb = self.user_factors(user) + self.user_bias(user)
+        item_emb = self.product_factors(item.view(-1)) + self.product_bias(
+            item.view(-1)
+        )
+        user_emb = self.user_factors(user.view(-1)) + self.user_bias(user.view(-1))
         mat_mult = (item_emb * user_emb).sum(1)
 
         return mat_mult
@@ -109,7 +110,7 @@ class MatrixFactorization(torch.nn.Module):
 
     def loss(self, forward, rating):
         """Calculate the loss of the predicted ratings."""
-        return self.loss_fn(forward, rating.float())
+        return self.loss_fn(forward, rating.float().view(-1))
 
     def compute_accuracy(self, data_loader):
         """
@@ -146,7 +147,7 @@ class MatrixFactorization(torch.nn.Module):
 
             train_loss += loss.item()
             total += predicted.numel()
-            correct += (predicted == rating).sum().item()
+            correct += (predicted == rating.view(-1)).sum().item()
 
             loss.backward()
             self.optimizer.step()
@@ -170,7 +171,7 @@ class MatrixFactorization(torch.nn.Module):
 
                 val_loss += self.loss(forward, rating).item()
                 total += predicted.numel()
-                correct += (predicted == rating).sum().item()
+                correct += (predicted == rating.view(-1)).sum().item()
 
         return val_loss, f"{(100 * correct / total):.2f}"
 
@@ -225,7 +226,7 @@ class MatrixFactorization(torch.nn.Module):
         item_b = self.product_bias.weight.detach()
 
         user_item_array = (item_em + item_b) @ (user_em + user_b).transpose(0, 1)
-        probs = self.activation(user_item_array)
-        preds = self._prob_to_class(probs).numpy()
+        #         probs = self.activation(user_item_array).numpy()
+        preds = self._prob_to_class(user_item_array).numpy()
 
         return preds

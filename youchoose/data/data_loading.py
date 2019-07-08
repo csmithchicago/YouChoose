@@ -10,9 +10,9 @@ import numpy as np
 import torch
 import pandas as pd
 from torch.utils.data import Dataset, DataLoader
-from typing import Optional
+from typing import Tuple, List
 
-from .data_processing import item_sets, dataframe_split, list_to_indexed_dict
+from .data_processing import item_sets, dataframe_split, transform_data_ids
 
 
 class InteractionsDataset(Dataset):
@@ -23,13 +23,11 @@ class InteractionsDataset(Dataset):
     def __init__(
         self,
         df: pd.DataFrame,
-        item_dict: dict,
-        user_dict: dict,
+        num_items: int,
         user_col: str = "user_id",
         item_col: str = "item_id",
         weight_col: str = "weight",
         dev=torch.device("cpu"),
-        reweighting: Optional[dict] = None,
         num_negs: int = 0,
     ):
         """
@@ -38,15 +36,12 @@ class InteractionsDataset(Dataset):
         Args:
             df (pd.DataFrame): Dataframe containing user_id, item_id, and
                 interaction (ratings).
-            item_dict (dict): Dictionary mapping item ids to indices.
-            user_dict (dict): Dictionary mapping user ids to indices.
+            num_items (int): The number of items contained in the dataset.
             user_col (str, optional): Column name for the users.
             item_col (str, optional): Column name for the items/products.
             weight_col (str, optional): Column name for interaction metric.
             dev (torch.device, optional): Choose location to run the model.
                 Defaults to torch.device("cpu").
-            reweighting (Optional[dict], optional): Dictionary mapping
-                interactions to new values. Defaults to None.
             num_negs (int, optional): Number of negative interactions to sample
                 for each positive interaction by a user. Defaults to 0.
 
@@ -59,17 +54,13 @@ class InteractionsDataset(Dataset):
             raise ValueError("The number of negative samples must be positive.")
 
         self.item_sets = item_sets(df, users=user_col, items=item_col)
-        self.i_dict = item_dict
-        self.u_dict = user_dict
-        self.w_dict = reweighting if reweighting is not None else dict()
-        self.num_items = len(item_dict)
-        self.num_users = len(user_dict)
         self.dev = dev
         self.num_negs = num_negs
-        self.items = self.transform(df[item_col], self.i_dict)
-        self.users = self.transform(df[user_col], self.u_dict)
-        self.weights = self.transform(df[weight_col], self.w_dict).float()
+        self.items = self.transform(df[item_col])
+        self.users = self.transform(df[user_col])
+        self.weights = self.transform(df[weight_col]).float()
         self.size = len(df)
+        self.n_items = num_items
 
     def __len__(self):
         return self.size
@@ -84,20 +75,17 @@ class InteractionsDataset(Dataset):
 
         if self.num_negs:
             users, neg_i, neg_r = self.negative_sampling(user)
-
-            item = torch.cat((item, neg_i.to(self.dev)))
-            user = torch.cat((user, users.to(self.dev)))
-            weight = torch.cat((weight, neg_r.to(self.dev)))
+            item = torch.cat((item.unsqueeze(0), neg_i.to(self.dev)))
+            user = torch.cat((user.unsqueeze(0), users.to(self.dev)))
+            weight = torch.cat((weight.unsqueeze(0), neg_r.to(self.dev)))
 
         return (user, item, weight)
 
-    def transform(self, df_rows, mapping):
+    def transform(self, df_rows):
         """
-        Replace dataframe with index values and convert to torch.Tensor
+        Convert pandas dataframe to a torch tensor and sent to computation device.
         """
-        transformed = df_rows.replace(mapping).to_numpy()
-
-        return torch.from_numpy(transformed).to(self.dev)
+        return torch.from_numpy(df_rows.to_numpy()).to(self.dev)
 
     def negative_sampling(self, user_ids):
         """
@@ -105,26 +93,23 @@ class InteractionsDataset(Dataset):
         have not previously purchased.
 
         Args:
-            user_ids (list, int): The user ids to sample negative interactions for.
+            user_ids (torch.tensor): The user ids to sample negative interactions for.
 
         Returns:
             tuple(torch.tensor): A tuple of torch tensors for the users, items, negative
                 interactions.
         """
-        if isinstance(user_ids, np.int64):
-            user_ids = [user_ids]
-
         u_list = []
         i_list = []
-        w_list = self.num_negs * len(user_ids) * [0.0]
+        w_list = self.num_negs * [0.0]
+        u_id = int(user_ids)
 
-        for u_id in user_ids:
-            neg_set = set(self.i_dict.keys()) - self.item_sets[u_id]
-            neg_v = np.random.choice(tuple(neg_set), self.num_negs)
+        neg_set = set(range(self.n_items)) - self.item_sets[u_id]
+        neg_v = np.random.choice(tuple(neg_set), self.num_negs)
 
-            for i_id in neg_v:
-                u_list.append(self.u_dict[u_id])
-                i_list.append(self.i_dict[i_id])
+        for i_id in neg_v:
+            u_list.append(u_id)
+            i_list.append(i_id)
 
         return (torch.tensor(u_list), torch.tensor(i_list), torch.tensor(w_list))
 
@@ -143,7 +128,7 @@ class InteractionsDataset(Dataset):
         train_frac: float = 0.80,
         test_frac: float = 0.10,
         **kwargs
-    ):
+    ) -> Tuple[List[DataLoader], int, int]:
         """
         Split the user, item, interactions dataframe into train, validate, and
         test dataloader objects.
@@ -173,34 +158,21 @@ class InteractionsDataset(Dataset):
             **kargs (dict, optional): Additional arguments to pass to the
                 torch.utils.data.DataLoading class.
 
-        Raises:
-            ValueError: The testing and training fractions must both be less than 1
-                and their sum to be less than 1.
-
         Returns:
-            ([DataLoaders], int, int): A tuple containing a list of DataLoaders for the
+            Tuple[Tuple[DataLoader], int, int]: A tuple containing a list of DataLoaders for the
                 training, validation, and testing data, and the number of unique users
                 and items.
         """
-        if not (train_frac <= 1 and test_frac <= 1 and (train_frac + test_frac) <= 1):
-            raise ValueError(
-                "The testing and training fractions must both be less "
-                "than 1 and sum to be less than 1."
-            )
-        split_dfs = dataframe_split(
-            dataframe, train_frac=train_frac, test_frac=test_frac
+        df_transformed, user_dict, item_dict = transform_data_ids(
+            dataframe,
+            user_col=user_col,
+            item_col=item_col,
+            weight_col=weight_col,
+            reweight=reweight,
         )
-
-        id_item_dict = list_to_indexed_dict(dataframe[item_col])
-        id_user_dict = list_to_indexed_dict(dataframe[user_col])
-
-        item_dict = {key: value for value, key in id_item_dict.items()}
-        user_dict = {key: value for value, key in id_user_dict.items()}
-
-        if reweight:
-            weight_dict = {val: 1.0 for val in dataframe[weight_col].unique()}
-        else:
-            weight_dict = {val: val for val in dataframe[weight_col].unique()}
+        split_dfs = dataframe_split(
+            df_transformed, train_frac=train_frac, test_frac=test_frac
+        )
 
         n_users, n_items = len(user_dict), len(item_dict)
 
@@ -210,12 +182,10 @@ class InteractionsDataset(Dataset):
         for df, shuffle in zip(split_dfs, shuffle_list):
             data_set = cls(
                 df,
-                item_dict,
-                user_dict,
+                n_items,
                 user_col=user_col,
                 item_col=item_col,
                 weight_col=weight_col,
-                reweighting=weight_dict,
                 dev=dev,
                 num_negs=num_negs,
             )

@@ -9,6 +9,9 @@ The recommender class.
 class Recommender:
     """ Recommender Base class."""
 
+    def create(self):
+        pass
+
     def train(self):
         pass
 
