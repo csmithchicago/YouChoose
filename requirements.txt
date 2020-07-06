@@ -48,7 +48,7 @@ html5lib==1.0.1
 identify==1.4.5
 idna==2.8
 ijson==2.3
-imageio==2.5.0
+imageio==2.9.0
 imagesize==1.1.0
 importlib-metadata==0.18
 ipykernel==5.1.1
