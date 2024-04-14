@@ -46,7 +46,7 @@ future==0.17.1
 hdbscan==0.8.20
 html5lib==1.0.1
 identify==1.4.5
-idna==2.8
+idna==3.7
 ijson==2.3
 imageio==2.5.0
 imagesize==1.1.0
