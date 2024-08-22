@@ -54,7 +54,7 @@ importlib-metadata==0.18
 ipykernel==5.1.1
 ipython==7.6.0
 ipython-genutils==0.2.0
-ipywidgets==7.4.2
+ipywidgets==8.1.5
 isort==4.3.20
 jedi==0.14.0
 Jinja2==2.10.1
